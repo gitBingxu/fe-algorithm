@@ -63,3 +63,35 @@ var findNumberIn2DArray = function(matrix, target) {
     return check(0, matrix[0].length - 1, 0, matrix.length - 1);
 };
 ```
+##### 3. 二叉搜索法
+从矩阵的右上角或者左下角出发, 我们这里选择的是从右上角出发, 然后比较右上角的值和`target`的大小, 从而决定是左移还是下移.
+```
+/**
+ * @param {number[][]} matrix
+ * @param {number} target
+ * @return {boolean}
+ */
+var searchMatrix = function(matrix, target) {
+    function check (x, y) {
+        if (x <= matrix.length - 1 && y >= 0) {
+            // 递归必须要确定边界条件
+            let val = matrix[x][y];
+            if (val === target) {
+                return true;
+            } else if (val < target) {
+                // 如果右上角的值比target小, 那么下移
+                x += 1;
+            } else {
+                // 右上角的值比target大, 那么左移
+                y -= 1;
+            }
+            // 在边界内递归调用
+            return check(x, y);
+        } else {
+            return false;
+        }
+    }
+    if (!Array.isArray(matrix[0])) matrix = [matrix];
+    return check(0, matrix[0].length - 1);
+};
+```
