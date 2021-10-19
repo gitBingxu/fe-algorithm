@@ -13,9 +13,12 @@
 给定`target = 5`, 返回`true`.
 给定`target = 33`, 返回`false`.
 
-##### 二. 思路
+##### 思路
 1. 暴力法
-##### 三. 代码
+暴力法没啥说的, 遍历二维数组, 找就完事了
+
+2. 圈定法
+因为该矩阵无论是横向还是纵向都是递增的, 所以我们可以比较每一行的首尾与`target`, 每一列的首尾与`target`, 这样可以圈定一个范围, 然后在递归调用该方法, 并传入上次圈定的范围, 就可以找到目标值了.
 ```
 /**
  * @param {number[][]} matrix
@@ -23,15 +26,20 @@
  * @return {boolean}
  */
 var findNumberIn2DArray = function(matrix, target) {
+    // lh, rh分别是横向的左右临界点, tv; bv为纵向的临界点
     function check (lH, rH, tV, bV) {
         if (rH >= lH && bV >= tV) {
             let startH, endH, startV, endV;
             for (let i = lH; i <= rH; i++) {
+                // 先确定新范围的左右临界点
                 if (matrix[tV][i] <= target && matrix[bV][i] >= target) {
+                    // 如果发现边界就是target的话, 就不需要再往下找了
                     if (matrix[tV][i] === target || matrix[bV][i] === target) return true;
                     if (startH === undefined) {
+                        // 第一个符合条件的是左临界点
                         startH = i;
                     }
+                    // 每找到一个新的临界点都是右临界点
                     endH = i;
                 }
             }
@@ -44,11 +52,13 @@ var findNumberIn2DArray = function(matrix, target) {
                     endV = i;
                 }
             }
-            return +startH === endH && +startV === endV && matrix[startV][startH] === target ? true : check(startH, endH, startV, endV);
+            // 当最终确定的数值与target相等时返回true, 否则进入下一轮循环
+            return matrix[startV] && (matrix[startV][startH] === target) ? true : check(startH, endH, startV, endV);
         } else {
             return false;
         }
     }
+    // 如果传入的不是二维数组, 那么转为二维数组
     if (!Array.isArray(matrix[0])) matrix = [matrix];
     return check(0, matrix[0].length - 1, 0, matrix.length - 1);
 };
