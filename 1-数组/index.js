@@ -1,7 +1,7 @@
 /*
  * @Author: Bing Xu
  * @Date: 2021-10-15 11:11:49
- * @LastEditTime: 2021-10-18 11:26:08
+ * @LastEditTime: 2021-10-21 16:25:47
  * @LastEditors: Bing Xu
  * @Description: 数组相关算法
  * @FilePath: /fe-algorithm/1-数组/index.js
@@ -166,4 +166,36 @@ var minSubArrayLen = function(target, nums) {
         left += 1;
     }
     return res;
+};
+
+
+// 剑指offer.二维数组中的查找 https://leetcode-cn.com/problems/er-wei-shu-zu-zhong-de-cha-zhao-lcof/
+/**
+ * 二叉树搜索, O(m + n)
+ * @param {number[][]} matrix
+ * @param {number} target
+ * @return {boolean}
+ */
+ var searchMatrix = function(matrix, target) {
+    function check (x, y) {
+        if (x <= matrix.length - 1 && y >= 0) {
+            // 递归必须要确定边界条件
+            let val = matrix[x][y];
+            if (val === target) {
+                return true;
+            } else if (val < target) {
+                // 如果右上角的值比target小, 那么下移
+                x += 1;
+            } else {
+                // 右上角的值比target大, 那么左移
+                y -= 1;
+            }
+            // 在边界内递归调用
+            return check(x, y);
+        } else {
+            return false;
+        }
+    }
+    if (!Array.isArray(matrix[0])) matrix = [matrix];
+    return check(0, matrix[0].length - 1);
 };
