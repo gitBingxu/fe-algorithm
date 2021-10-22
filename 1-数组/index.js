@@ -1,7 +1,7 @@
 /*
  * @Author: Bing Xu
  * @Date: 2021-10-15 11:11:49
- * @LastEditTime: 2021-10-21 16:25:47
+ * @LastEditTime: 2021-10-21 16:41:26
  * @LastEditors: Bing Xu
  * @Description: 数组相关算法
  * @FilePath: /fe-algorithm/1-数组/index.js
@@ -119,8 +119,10 @@ var minSubArrayLen = function(target, nums) {
  * @return {number}
  */
 var minSubArrayLen = function(target, nums) {
+    // 定义快慢指针
     let [l, r, res] = [0, 0, Number.MAX_SAFE_INTEGER];
     let sum = 0;
+    // 这里注意不要把 r < nums.length 当做循环条件
     while (l <= r) {
         if (sum < target) {
             if (r > nums.length - 1) break;
@@ -140,14 +142,19 @@ var minSubArrayLen = function(target, nums) {
  * @param {number} n
  * @return {number[][]}
  */
- var generateMatrix = function(n) {
+var generateMatrix = function(n) {
+    // 生成二维数组容器
     const res = new Array(n).fill(-1).map(item => []);
+    // 定义左, 上, 右, 下 四个边界
     let [left, top, right, bottom] = [0, 0, n - 1, n - 1];
     let num = 1, taregt = n * n;
     while (num <= taregt) {
+        // 这里所有的for循环都会从行(列)的的头遍历到尾
+        // 这样的话刚好会消除一行(列), 谓之消除法
         for (let l = left; l <= right; l++) {
             res[top][l] = num++;
         }
+        // 矩阵最上方的一行被消除, 上边界下移
         top += 1;
 
         for (let t = top; t <= bottom; t++) {
@@ -196,6 +203,7 @@ var minSubArrayLen = function(target, nums) {
             return false;
         }
     }
+    // 把一维矩阵转为二维矩阵处理
     if (!Array.isArray(matrix[0])) matrix = [matrix];
     return check(0, matrix[0].length - 1);
 };
