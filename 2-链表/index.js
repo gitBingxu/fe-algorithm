@@ -148,3 +148,81 @@ MyLinkedList.prototype.getNode = function (index) {
     }
     return index > -1 ? res : null;
 };
+
+
+/**
+ * 206. 翻转链表 https://leetcode-cn.com/problems/reverse-linked-list/
+ * 双指针
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var reverseList = function(head) {
+    let [pre, cur] = [null, head]; // 这里声明pre为null是一个关键点
+    while (cur) {
+        let next = cur.next;
+        cur.next = pre;
+        pre = cur;
+        cur = next;
+    }
+    return pre;
+};
+// 递归
+var reverseList = function(head) {
+    function reverse (pre, cur) {
+        if (!cur) return pre;
+        let next = cur.next;
+        cur.next = pre;
+        pre = cur;
+        cur = next;
+        // 递归要搞清楚什么时候需要return
+        return reverse(pre, cur);
+    }
+    return reverse(null, head);
+};
+
+
+/**
+ * 24.两两交换链表中的节点 https://leetcode-cn.com/problems/swap-nodes-in-pairs/submissions/
+ * 递归
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+ var swapPairs = function(head) {
+    function swap(node) {
+        // 递归要搞清楚出口
+        if (node) {
+            let cur = node.next;
+            if (cur) {
+                let next = cur.next;
+                cur.next = node;
+                node.next = swap(next);
+                // 出口3：聊表交换完毕后返回头结点
+                return cur;
+            } else {
+                // 出口2：链表只有1个节点
+                return node;
+            }
+        } else {
+            // 出口1：链表为空的时候
+            return null;
+        }
+    }
+    return swap(head);
+};
+// 双指针
+var swapPairs = function(head) {
+    let res = new ListNode(0, head);
+    let [pre, cur] = [res, head];
+    // 这里同样注意是当链表不为空并且长度大于1的时候才需要交换
+    // 这里指针比较少，所以多了很多交换步骤，不建议使用
+    while (cur && cur.next) {
+        let next = cur.next;
+        pre.next = next;
+        next = next.next;
+        pre.next.next = cur;
+        cur.next = next;
+        pre = cur;
+        cur = cur.next;
+    }
+    return res.next;
+};
