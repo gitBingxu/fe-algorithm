@@ -15,7 +15,8 @@
  * @param {number} val
  * @return {ListNode}
  */
- var removeElements = function(head, val) {
+var removeElements = function(head, val) {
+    // 使用虚头节点会减少复杂度
     const res = new ListNode(0, head);
     let cur = res;
     while (cur.next) {
@@ -42,6 +43,7 @@ var MyLinkedList = function(val, next) {
  */
 MyLinkedList.prototype.get = function(index) {
     let node = this.getNode(index);
+    // 这里要注意当节点的val为null的时候表示的是空节点
     return node && (node.val !== null) ? node.val : -1;
 };
 
@@ -51,8 +53,10 @@ MyLinkedList.prototype.get = function(index) {
  */
 MyLinkedList.prototype.addAtHead = function(val) {
     if (this.val === null) {
+        // 如果头节点是空节点的话，这里直接给头结点赋值
         this.val = val;
     } else {
+        // 复制一个老的头结点，然后用当前节点指向老的头结点
         let oldHead = new MyLinkedList(this.val, this.next);
         this.val = val;
         this.next = oldHead;
@@ -66,6 +70,7 @@ MyLinkedList.prototype.addAtHead = function(val) {
 MyLinkedList.prototype.addAtTail = function(val) {
     const tail = this.getTail();
     if (tail.val === null) {
+        // 这里同样注意尾结点是否是空节点
         this.val = val;
     } else {
         tail.next = new MyLinkedList(val);
@@ -79,15 +84,15 @@ MyLinkedList.prototype.addAtTail = function(val) {
  */
 MyLinkedList.prototype.addAtIndex = function(index, val) {
     if (index > 0) {
+        // 如果index大于0，那么直接找到目标节点的前面的节点
         let prev = this.getNode(index - 1);
         if (prev) {
             let cur = new MyLinkedList(val, prev.next);
             prev.next = cur;
         }
     } else {
-        let next = new MyLinkedList(this.val, this.next);
-        this.val = val;
-        this.next = next;
+        // 如果index <= 0 那么直接在头部插入一个节点
+        this.addAtHead(val);
     }
 };
 
@@ -100,10 +105,12 @@ MyLinkedList.prototype.deleteAtIndex = function(index) {
     let prev;
     
     for (; index > 0; index--) {
+        // 这里找目标节点的前一个节点
         if (cur.next) {
             prev = cur;
             cur = cur.next;
         } else {
+            // 如果index范围内没有找到目标，那么证明index是无效的
             return;
         }
     }
